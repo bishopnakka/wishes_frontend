@@ -20,7 +20,7 @@ export default function EditWish() {
   }, []);
 
   const fetchWish = async () => {
-    const response = await axios.get(`/api/wishes/${id}`);
+    const response = await api.get(`/api/wishes/${id}`);
 
     setMessage(response.data.message);
 

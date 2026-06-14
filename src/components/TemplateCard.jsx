@@ -27,7 +27,7 @@ export default function TemplateCard({ template }) {
         return;
       }
 
-      const response = await axios.post(
+      const response = await api.post(
         "/api/payment/order",
 
         {

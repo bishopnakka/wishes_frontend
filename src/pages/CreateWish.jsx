@@ -33,7 +33,7 @@ export default function CreateWish() {
     try {
       const userId = localStorage.getItem("userId");
 
-      const response = await axios.get(`/api/template/access/${id}/${userId}`);
+      const response = await api.get(`/api/template/access/${id}/${userId}`);
 
       if (!response.data.access) {
         alert("Buy Premium Template First");
@@ -49,7 +49,7 @@ export default function CreateWish() {
 
   const fetchTemplate = async () => {
     try {
-      const response = await axios.get(`/api/template/${id}`);
+      const response = await api.get(`/api/template/${id}`);
 
       setTemplate(response.data);
     } catch (error) {

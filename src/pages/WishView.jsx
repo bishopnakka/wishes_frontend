@@ -34,7 +34,7 @@ export default function WishView() {
 
   const fetchWish = async () => {
     try {
-      const response = await axios.get(`/api/wishes/${id}`);
+      const response = await api.get(`/api/wishes/${id}`);
 
       setWish(response.data);
 
@@ -111,7 +111,7 @@ export default function WishView() {
       return;
     }
     try {
-      const response = await axios.post(
+      const response = await api.post(
         `/api/wishes/comment/${id}`,
 
         {

@@ -34,7 +34,7 @@ export default function Login() {
         ? "/api/auth/login"
         : "/api/auth/register";
 
-      const response = await axios.post(url, formData);
+      const response = await api.post(url, formData);
 
       if (!isLogin) {
         alert("Registration Success");

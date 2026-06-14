@@ -23,7 +23,7 @@ export default function AdminPanel() {
 
   const fetchTemplates = async () => {
     try {
-      const response = await axios.get("/api/template");
+      const response = await api.get("/api/template");
 
       setTemplates(response.data);
     } catch (error) {
