@@ -1,0 +1,116 @@
+.comments-box{
+
+  width:100%;
+  max-width:800px;
+
+  margin:40px auto;
+
+  padding:25px;
+
+  background:
+    rgba(255,255,255,.08);
+
+  backdrop-filter:blur(15px);
+
+  border-radius:25px;
+}
+
+.email-box{
+
+  display:flex;
+
+  gap:10px;
+
+  margin-bottom:20px;
+}
+
+.email-box input{
+
+  flex:1;
+
+  padding:12px;
+
+  border:none;
+
+  border-radius:12px;
+}
+
+.comment-card{
+
+  background:
+    rgba(255,255,255,.08);
+
+  padding:15px;
+
+  border-radius:15px;
+
+  margin-top:12px;
+
+  border-left:
+    4px solid #ec4899;
+}
+
+.comments-box{
+
+  width:100%;
+
+  max-width:700px;
+}
+
+.comments-box input{
+
+  width:100%;
+
+  padding:12px;
+
+  border-radius:12px;
+
+  margin-top:10px;
+}
+
+.comments-box button{
+
+  width:100%;
+
+  margin-top:10px;
+}
+
+@media(max-width:768px){
+
+  .comments-box{
+
+    padding:18px;
+  }
+
+  .email-box{
+
+    flex-direction:column;
+  }
+}
+
+.comment-card{
+
+  background:white;
+
+  border-radius:18px;
+
+  padding:15px;
+
+  margin-bottom:15px;
+
+  box-shadow:
+    0 8px 25px
+    rgba(0,0,0,.1);
+}
+
+.comment-card h4{
+
+  color:#ec4899;
+
+  margin-bottom:6px;
+}
+
+.comment-card p{
+
+  color:#334155;
+}
