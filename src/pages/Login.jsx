@@ -1,64 +1,43 @@
-import {
-  useState
-} from 'react';
+import { useState } from "react";
 
-import axios from 'axios';
-import '../styles/auth.css';
+import axios from "axios";
+import "../styles/auth.css";
 
-import {
-  useNavigate
-} from 'react-router-dom';
+import api from '../api/axios';
+
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const navigate = useNavigate();
 
-  const navigate =  useNavigate();
+  const [isLogin, setIsLogin] = useState(true);
 
-  const [isLogin, setIsLogin] =  useState(true);
+  const [formData, setFormData] = useState({
+    name: "",
 
-  const [formData, setFormData] =
-    useState({
+    email: "",
 
-      name: '',
-
-      email: '',
-
-      password: ''
-
-    });
+    password: "",
+  });
 
   const handleChange = (e) => {
-
     setFormData({
-
       ...formData,
 
-      [e.target.name]:
-        e.target.value
-
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = async () => {
-
     try {
-
       const url = isLogin
+        ? "/api/auth/login"
+        : "/api/auth/register";
 
-        ? 'http://localhost:5000/api/auth/login'
-
-        : 'http://localhost:5000/api/auth/register';
-
-      const response =
-        await axios.post(
-          url,
-          formData
-        );
+      const response = await axios.post(url, formData);
 
       if (!isLogin) {
-
-        alert(
-          'Registration Success'
-        );
+        alert("Registration Success");
 
         setIsLogin(true);
 
@@ -66,146 +45,65 @@ export default function Login() {
       }
 
       localStorage.setItem(
+        "token",
 
-        'token',
-
-        response.data.token
-
+        response.data.token,
       );
 
       localStorage.setItem(
+        "userId",
 
-        'userId',
-
-        response.data.user._id
-
+        response.data.user._id,
       );
 
       localStorage.setItem(
+        "role",
 
-        'role',
-
-        response.data.user.role
-
+        response.data.user.role,
       );
 
-      navigate('/dashboard');
-
+      navigate("/dashboard");
     } catch (error) {
-
       console.log(error);
 
-      alert(
-        'Authentication Failed'
-      );
-
+      alert("Authentication Failed");
     }
   };
 
   return (
+    <div className="auth-page">
+      <div className="auth-box">
+        <h2>{isLogin ? "Login" : "Register"}</h2>
 
-    <div className='auth-page'>
-
-      <div className='auth-box'>
-
-        <h2>
-
-          {
-
-            isLogin
-
-              ? 'Login'
-
-              : 'Register'
-
-          }
-
-        </h2>
-
-        {
-
-          !isLogin && (
-
-            <input
-
-              type='text'
-
-              name='name'
-
-              placeholder='Name'
-
-              onChange={handleChange}
-
-            />
-
-          )
-
-        }
+        {!isLogin && (
+          <input
+            type="text"
+            name="name"
+            placeholder="Name"
+            onChange={handleChange}
+          />
+        )}
 
         <input
-
-          type='email'
-
-          name='email'
-
-          placeholder='Email'
-
+          type="email"
+          name="email"
+          placeholder="Email"
           onChange={handleChange}
-
         />
 
         <input
-
-          type='password'
-
-          name='password'
-
-          placeholder='Password'
-
+          type="password"
+          name="password"
+          placeholder="Password"
           onChange={handleChange}
-
         />
 
-        <button
-          onClick={handleSubmit}
-        >
+        <button onClick={handleSubmit}>{isLogin ? "Login" : "Register"}</button>
 
-          {
-
-            isLogin
-
-              ? 'Login'
-
-              : 'Register'
-
-          }
-
-        </button>
-
-        <p
-
-          className='switch-auth'
-
-          onClick={() =>
-            setIsLogin(!isLogin)
-          }
-
-        >
-
-          {
-
-            isLogin
-
-              ? 'Create Account'
-
-              : 'Already Have Account?'
-
-          }
-
+        <p className="switch-auth" onClick={() => setIsLogin(!isLogin)}>
+          {isLogin ? "Create Account" : "Already Have Account?"}
         </p>
-
       </div>
-
     </div>
   );
 }

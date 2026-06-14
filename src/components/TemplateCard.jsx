@@ -1,278 +1,134 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import axios from 'axios';
+import axios from "axios";
 
-import {
-  useNavigate
-} from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-import '../styles/template.css';
+import api from '../api/axios';
 
-export default function TemplateCard({
-  template
-}) {
+import "../styles/template.css";
 
-  const navigate =
-    useNavigate();
+export default function TemplateCard({ template }) {
+  const navigate = useNavigate();
 
-  const [loading,
-    setLoading] =
-    useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const buyTemplate = async (
-    templateId,
-    price
-  ) => {
-
+  const buyTemplate = async (templateId, price) => {
     try {
-
       setLoading(true);
 
-      const token =
-        localStorage.getItem(
-          'token'
-        );
+      const token = localStorage.getItem("token");
 
       if (!token) {
+        alert("Please Login First");
 
-        alert(
-          'Please Login First'
-        );
-
-        navigate('/login');
+        navigate("/login");
 
         return;
       }
 
-      const response =
-        await axios.post(
+      const response = await axios.post(
+        "/api/payment/order",
 
-          'http://localhost:5000/api/payment/order',
-
-          {
-            amount: Number(price)
-          }
-
-        );
+        {
+          amount: Number(price),
+        },
+      );
 
       const options = {
+        key: "rzp_test_Sui2cmFZ7IlTwB",
 
-        key:
-          'rzp_test_Sui2cmFZ7IlTwB',
+        amount: response.data.amount,
 
-        amount:
-          response.data.amount,
+        currency: response.data.currency,
 
-        currency:
-          response.data.currency,
+        name: "Wishes App",
 
-        name:
-          'Wishes App',
+        description: "Premium Template Purchase",
 
-        description:
-          'Premium Template Purchase',
-
-        order_id:
-          response.data.id,
+        order_id: response.data.id,
 
         handler: async () => {
-
           try {
-
             await axios.post(
-
-              'http://localhost:5000/api/purchase',
+              "/api/purchase",
 
               {
-                templateId
+                templateId,
               },
 
               {
                 headers: {
-
-                  authorization:
-                    token
-
-                }
-              }
-
+                  authorization: token,
+                },
+              },
             );
 
-            alert(
-              'Payment Successful 🎉'
-            );
+            alert("Payment Successful 🎉");
 
-            navigate(
-              `/create/${templateId}`
-            );
-
+            navigate(`/create/${templateId}`);
           } catch (error) {
-
             console.log(error);
 
-            alert(
-              'Payment Success But Purchase Save Failed'
-            );
-
+            alert("Payment Success But Purchase Save Failed");
           }
-
         },
 
         theme: {
-
-          color:
-            '#ec4899'
-
-        }
-
+          color: "#ec4899",
+        },
       };
 
-      const rzp =
-        new window.Razorpay(
-          options
-        );
+      const rzp = new window.Razorpay(options);
 
       rzp.open();
-
     } catch (error) {
-
       console.log(error);
 
-      alert(
-        error.response?.data?.message ||
-        'Payment Failed'
-      );
-
+      alert(error.response?.data?.message || "Payment Failed");
     } finally {
-
       setLoading(false);
-
     }
-
   };
 
   return (
+    <div className="template-card">
+      {template.isPremium && <div className="premium-badge">⭐ Premium</div>}
 
-    <div className='template-card'>
+      <img src={template.previewImage} alt="template" />
 
-      {
+      <div className="template-content">
+        <span className="template-category">{template.category}</span>
 
-        template.isPremium && (
+        <h2>{template.heading}</h2>
 
-          <div className='premium-badge'>
+        <h3>{template.title}</h3>
 
-            ⭐ Premium
+        <p>{template.description}</p>
 
-          </div>
+        <div className="template-footer">
+          <span className="template-price">₹{template.price}</span>
 
-        )
+          {template.isPremium ? (
+            <button
+              disabled={loading}
+              onClick={() =>
+                buyTemplate(
+                  template._id,
 
-      }
-
-      <img
-
-        src={
-          template.previewImage
-        }
-
-        alt='template'
-
-      />
-
-      <div className='template-content'>
-
-        <span
-          className='template-category'
-        >
-
-          {template.category}
-
-        </span>
-
-        <h2>
-          {template.heading}
-        </h2>
-
-        <h3>
-          {template.title}
-        </h3>
-
-        <p>
-          {template.description}
-        </p>
-
-        <div className='template-footer'>
-
-          <span
-            className='template-price'
-          >
-
-            ₹{template.price}
-
-          </span>
-
-          {
-
-            template.isPremium ? (
-
-              <button
-
-                disabled={
-                  loading
-                }
-
-                onClick={() =>
-                  buyTemplate(
-
-                    template._id,
-
-                    template.price
-
-                  )
-                }
-
-              >
-
-                {
-
-                  loading
-
-                    ? 'Processing...'
-
-                    : 'Buy Premium'
-
-                }
-
-              </button>
-
-            ) : (
-
-              <button
-
-                onClick={() =>
-                  navigate(
-
-                    `/create/${template._id}`
-
-                  )
-                }
-
-              >
-
-                Use Template
-
-              </button>
-
-            )
-
-          }
-
+                  template.price,
+                )
+              }
+            >
+              {loading ? "Processing..." : "Buy Premium"}
+            </button>
+          ) : (
+            <button onClick={() => navigate(`/create/${template._id}`)}>
+              Use Template
+            </button>
+          )}
         </div>
-
       </div>
-
     </div>
-
   );
-
 }

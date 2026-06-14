@@ -1,21 +1,10 @@
-import {
-  Navigate
-} from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 
-export default function ProtectedRoute({
-  children
-}) {
-
-  const userId =
-    localStorage.getItem(
-      'userId'
-    );
+export default function ProtectedRoute({ children }) {
+  const userId = localStorage.getItem("userId");
 
   if (!userId) {
-
-    return (
-      <Navigate to='/login' />
-    );
+    return <Navigate to="/login" />;
   }
 
   return children;

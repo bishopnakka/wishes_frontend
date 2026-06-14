@@ -1,77 +1,46 @@
-import {
-  useEffect,
-  useState
-} from 'react';
+import { useEffect, useState } from "react";
 
-import '../styles/home.css';
+import "../styles/home.css";
 
-import axios from 'axios';
+import axios from "axios";
 
-import TemplateCard from '../components/TemplateCard';
+import api from '../api/axios';
+
+import TemplateCard from "../components/TemplateCard";
 
 export default function Home() {
-
-const [templates, setTemplates] = useState([]);
+  const [templates, setTemplates] = useState([]);
 
   useEffect(() => {
-
     fetchTemplates();
-
   }, []);
 
   const fetchTemplates = async () => {
-
     try {
+      const response = await axios.get("/api/template");
 
-      const response = await axios.get(  'http://localhost:5000/api/template'  );
-
-      setTemplates(  response.data  );
-
+      setTemplates(response.data);
     } catch (error) {
-
       console.log(error);
-
     }
   };
 
   return (
-
-    <div className='home-page'>
-
-      <div className='home-header'>
-
-        <h1>
-          Wishes Templates 🎉
-        </h1>
+    <div className="home-page">
+      <div className="home-header">
+        <h1>Wishes Templates 🎉</h1>
 
         <p>
-          Create beautiful surprise wishes
-          for birthdays, weddings,
+          Create beautiful surprise wishes for birthdays, weddings,
           anniversaries and more.
         </p>
-
       </div>
 
-      <div className='templates-grid'>
-
-        {
-
-          templates.map((template) => (
-
-            <TemplateCard
-
-              key={template._id}
-
-              template={template}
-
-            />
-
-          ))
-
-        }
-
+      <div className="templates-grid">
+        {templates.map((template) => (
+          <TemplateCard key={template._id} template={template} />
+        ))}
       </div>
-
     </div>
   );
 }

@@ -1,346 +1,193 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import '../styles/createWish.css';
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-import { useParams, useNavigate } from 'react-router-dom';
+import "../styles/createWish.css";
+import api from "../api/axios";
+
+import { useParams, useNavigate } from "react-router-dom";
 
 export default function CreateWish() {
-
   const { id } = useParams();
 
   const navigate = useNavigate();
 
-  const [generatedLink, setGeneratedLink] = useState('');
+  const [generatedLink, setGeneratedLink] = useState("");
 
   const [template, setTemplate] = useState(null);
 
-  const [unlockWord, setUnlockWord] = useState('');
+  const [unlockWord, setUnlockWord] = useState("");
 
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
 
   const [images, setImages] = useState([]);
 
   useEffect(() => {
-
     fetchTemplate();
 
     checkAccess();
-
   }, []);
 
   /* ACCESS CHECK */
 
   const checkAccess = async () => {
-
     try {
+      const userId = localStorage.getItem("userId");
 
-      const userId =
-        localStorage.getItem(
-          'userId'
-        );
-
-      const response = await axios.get(  `http://localhost:5000/api/template/access/${id}/${userId}` );
+      const response = await axios.get(`/api/template/access/${id}/${userId}`);
 
       if (!response.data.access) {
+        alert("Buy Premium Template First");
 
-        alert(
-          'Buy Premium Template First'
-        );
-
-        navigate('/');
-
+        navigate("/");
       }
-
     } catch (error) {
-
       console.log(error);
-
     }
   };
 
   /* FETCH TEMPLATE */
 
   const fetchTemplate = async () => {
-
     try {
+      const response = await axios.get(`/api/template/${id}`);
 
-      const response =
-        await axios.get(`http://localhost:5000/api/template/${id}`);
-
-      setTemplate(
-        response.data
-      );
-
+      setTemplate(response.data);
     } catch (error) {
-
       console.log(error);
-
     }
   };
 
   /* CREATE WISH */
 
   const createWish = async () => {
-
     try {
-
-      const token =
-        localStorage.getItem(
-          'token'
-        );
+      const token = localStorage.getItem("token");
 
       const formData = new FormData();
 
       formData.append(
+        "userId",
 
-        'userId',
-
-        localStorage.getItem(
-          'userId'
-        )
-
+        localStorage.getItem("userId"),
       );
+
+      formData.append("message", message);
 
       formData.append(
-        'message',
-        message
+        "templateHeading",
+
+        template.heading,
       );
 
-      formData.append(
-
-        'templateHeading',
-
-        template.heading
-
-      );
-
-      formData.append(
-        'unlockWord',
-        unlockWord
-      );
+      formData.append("unlockWord", unlockWord);
 
       for (let i = 0; i < images.length; i++) {
-
-        formData.append(
-          'images',
-          images[i]
-        );
+        formData.append("images", images[i]);
       }
 
-  const response = await axios.post(
+      const response = await axios.post(
+        "/api/wishes/create",
 
-          'http://localhost:5000/api/wishes/create',
+        formData,
 
-          formData,
-
-          {
-            headers: {
-
-              authorization:
-                token
-
-            }
-          }
-
-        );
-
-      setGeneratedLink(response.data.link);
-
-    } catch (error) {
-
-      console.log(error);
-
-      alert(
-        'Wish Creation Failed'
+        {
+          headers: {
+            authorization: token,
+          },
+        },
       );
 
+      setGeneratedLink(response.data.link);
+    } catch (error) {
+      console.log(error);
+
+      alert("Wish Creation Failed");
     }
   };
 
   if (!template) {
-
     return <h1>Loading...</h1>;
   }
 
   return (
+    <div className="create-page">
+      <div className="create-container">
+        <h1>{template.heading}</h1>
 
-    <div className='create-page'>
+        <p>{template.description}</p>
 
-      <div className='create-container'>
+        <textarea
+          placeholder="Write your wishes"
+          onChange={(e) => setMessage(e.target.value)}
+        />
 
-        <h1>
-          {template.heading}
-        </h1>
+        <input
+          type="text"
+          placeholder="Secret Unlock Word"
+          onChange={(e) => setUnlockWord(e.target.value)}
+        />
 
-        <p>
-          {template.description}
+        {unlockWord && (
+          <p className="secret-preview">
+            🔐 Secret Word:
+            <strong>{unlockWord}</strong>
+          </p>
+        )}
+
+        <p className="secret-tip">
+          🔑 The receiver must enter this word to unlock the wish.
         </p>
 
-       <textarea
+        <p className="upload-tip">
+          📸 Upload up to 3 images. For the best experience, use exactly 3
+          photos.
+        </p>
 
-  placeholder='Write your wishes'
+        <input
+          type="file"
+          multiple
+          accept="image/*"
+          onChange={(e) => setImages(e.target.files)}
+        />
 
-  onChange={(e) =>
-    setMessage(
-      e.target.value
-    )
-  }
+        {images.length > 0 && (
+          <p className="image-count">
+            ✅ Selected:
+            {images.length}
+            image(s)
+          </p>
+        )}
 
-/>
+        <button onClick={createWish}>Generate Wish Link</button>
 
-<input
+        {generatedLink && (
+          <div className="success-box">
+            <h3>🎉 Wish Created Successfully</h3>
 
-  type='text'
+            <input value={generatedLink} readOnly />
 
-  placeholder='Secret Unlock Word'
+            <div className="success-actions">
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(generatedLink);
 
-  onChange={(e) =>
-    setUnlockWord(
-      e.target.value
-    )
-  }
+                  alert("Link Copied");
+                }}
+              >
+                Copy Link 🔗
+              </button>
 
-/>
-
-{
-  unlockWord && (
-
-    <p
-      className='secret-preview'
-    >
-
-      🔐 Secret Word:
-      <strong>
-        {unlockWord}
-      </strong>
-
-    </p>
-
-  )
-}
-
-<p className='secret-tip'>
-
-  🔑 The receiver must enter
-  this word to unlock the wish.
-
-</p>
-
-<p className='upload-tip'>
-
-  📸 Upload up to 3 images.
-  For the best experience,
-  use exactly 3 photos.
-
-</p>
-
-<input
-
-  type='file'
-
-  multiple
-
-  accept='image/*'
-
-  onChange={(e) =>
-    setImages(
-      e.target.files
-    )
-  }
-
-/>
-
-{
-  images.length > 0 && (
-
-    <p
-      className='image-count'
-    >
-
-      ✅ Selected:
-      {images.length}
-      image(s)
-
-    </p>
-
-  )
-}
-
-<button
-  onClick={createWish}
->
-
-  Generate Wish Link
-
-</button>
-
-{
-  generatedLink && (
-
-    <div className='success-box'>
-
-      <h3>
-
-        🎉 Wish Created Successfully
-
-      </h3>
-
-      <input
-
-        value={generatedLink}
-
-        readOnly
-
-      />
-
-      <div className='success-actions'>
-
-        <button
-
-          onClick={() => {
-
-            navigator.clipboard.writeText(
-              generatedLink
-            );
-
-            alert(
-              'Link Copied'
-            );
-
-          }}
-
-        >
-
-          Copy Link 🔗
-
-        </button>
-
-        <button
-
-          onClick={() => {
-
-            window.open(
-              generatedLink,
-              '_blank'
-            );
-
-          }}
-
-        >
-
-          View Wish 👀
-
-        </button>
-
+              <button
+                onClick={() => {
+                  window.open(generatedLink, "_blank");
+                }}
+              >
+                View Wish 👀
+              </button>
+            </div>
+          </div>
+        )}
       </div>
-
-    </div>
-
-  )
-}
-
-      </div>
-
     </div>
   );
 }

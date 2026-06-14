@@ -1,165 +1,74 @@
-import {
-  useEffect,
-  useState
-}
-from 'react';
+import { useEffect, useState } from "react";
 
-import axios
-from 'axios';
+import axios from "axios";
 
-import {
-  useParams,
-  useNavigate
-}
-from 'react-router-dom';
+import { useParams, useNavigate } from "react-router-dom";
 
-export default function EditWish(){
+import api from '../api/axios';
 
-  const { id } =
-  useParams();
+export default function EditWish() {
+  const { id } = useParams();
 
-  const navigate =
-  useNavigate();
+  const navigate = useNavigate();
 
-  const [message,
-  setMessage] =
-  useState('');
+  const [message, setMessage] = useState("");
 
-  const [unlockWord,
-  setUnlockWord] =
-  useState('');
+  const [unlockWord, setUnlockWord] = useState("");
 
-  useEffect(()=>{
-
+  useEffect(() => {
     fetchWish();
+  }, []);
 
-  },[]);
+  const fetchWish = async () => {
+    const response = await axios.get(`/api/wishes/${id}`);
 
-  const fetchWish =
-  async()=>{
+    setMessage(response.data.message);
 
-    const response =
-    await axios.get(
-
-      `http://localhost:5000/api/wishes/${id}`
-
-    );
-
-    setMessage(
-      response.data.message
-    );
-
-    setUnlockWord(
-      response.data.unlockWord
-    );
-
+    setUnlockWord(response.data.unlockWord);
   };
 
-  const updateWish =
-  async()=>{
-
-    const token =
-    localStorage.getItem(
-      'token'
-    );
+  const updateWish = async () => {
+    const token = localStorage.getItem("token");
 
     await axios.put(
-
-      `http://localhost:5000/api/wishes/${id}`,
+      `/api/wishes/${id}`,
 
       {
-
         message,
 
-        unlockWord
-
+        unlockWord,
       },
 
       {
-
-        headers:{
-
-          authorization:
-          token
-
-        }
-
-      }
-
+        headers: {
+          authorization: token,
+        },
+      },
     );
 
-    alert(
-      'Wish Updated 🎉'
-    );
+    alert("Wish Updated 🎉");
 
-    navigate(
-      '/dashboard'
-    );
-
+    navigate("/dashboard");
   };
 
-  return(
-
-    <div
-      className='create-page'
-    >
-
-      <div
-        className='create-container'
-      >
-
-        <h1>
-
-          Edit Wish
-
-        </h1>
+  return (
+    <div className="create-page">
+      <div className="create-container">
+        <h1>Edit Wish</h1>
 
         <textarea
-
           value={message}
-
-          onChange={(e)=>
-
-            setMessage(
-              e.target.value
-            )
-
-          }
-
+          onChange={(e) => setMessage(e.target.value)}
         />
 
         <input
-
-          type='text'
-
+          type="text"
           value={unlockWord}
-
-          onChange={(e)=>
-
-            setUnlockWord(
-              e.target.value
-            )
-
-          }
-
+          onChange={(e) => setUnlockWord(e.target.value)}
         />
 
-        <button
-
-          onClick={
-            updateWish
-          }
-
-        >
-
-          Save Changes
-
-        </button>
-
+        <button onClick={updateWish}>Save Changes</button>
       </div>
-
     </div>
-
   );
-
 }
