@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 
-import axios from "axios";
-
 import api from "../api/axios";
 
 import { useParams } from "react-router-dom";
@@ -30,7 +28,7 @@ export default function WishView() {
 
   useEffect(() => {
     fetchWish();
-  }, []);
+  }, [id]);
 
   const fetchWish = async () => {
     try {
@@ -61,14 +59,13 @@ export default function WishView() {
   const sendEmail = async () => {
     console.log("SENDING TO:", email);
 
-    if (!email.trim()) {
-      alert("Enter Email");
-
+    if (!email || !email.includes("@")) {
+      alert("Enter Valid Email");
       return;
     }
 
     try {
-      const response = await axios.post(
+      const response = await api.post(
         "/api/email/send",
 
         {
@@ -89,6 +86,10 @@ export default function WishView() {
       setEmail("");
 
       setEmailSuccess(true);
+
+      setTimeout(() => {
+        setEmailSuccess(false);
+      }, 3000);
     } catch (error) {
       console.log("FULL ERROR:", error);
 

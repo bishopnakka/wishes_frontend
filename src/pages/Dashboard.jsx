@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 
-import axios from "axios";
-
 import { useNavigate } from "react-router-dom";
 
 import api from "../api/axios";
@@ -42,7 +40,7 @@ export default function Dashboard() {
     try {
       const token = localStorage.getItem("token");
 
-      await axios.delete(
+      await api.delete(
         `/api/wishes/${id}`,
 
         {

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 
 import "../styles/createWish.css";
 import api from "../api/axios";
@@ -85,7 +84,7 @@ export default function CreateWish() {
         formData.append("images", images[i]);
       }
 
-      const response = await axios.post(
+      const response = await api.post(
         "/api/wishes/create",
 
         formData,

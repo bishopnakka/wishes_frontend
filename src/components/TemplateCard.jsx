@@ -1,7 +1,5 @@
 import { useState } from "react";
 
-import axios from "axios";
-
 import { useNavigate } from "react-router-dom";
 
 import api from '../api/axios';
@@ -50,7 +48,7 @@ export default function TemplateCard({ template }) {
 
         handler: async () => {
           try {
-            await axios.post(
+            await api.post(
               "/api/purchase",
 
               {

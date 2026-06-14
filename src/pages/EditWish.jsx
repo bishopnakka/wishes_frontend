@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 
-import axios from "axios";
-
 import { useParams, useNavigate } from "react-router-dom";
 
-import api from '../api/axios';
+import api from '../api/axios.js';
 
 export default function EditWish() {
   const { id } = useParams();

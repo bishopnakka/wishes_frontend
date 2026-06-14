@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-import axios from "axios";
 import "../styles/admin.css";
 import api from "../api/axios";
 
@@ -43,7 +42,7 @@ export default function AdminPanel() {
 
   const createTemplate = async () => {
     try {
-      await axios.post(
+      await api.post(
         "/api/admin/template/create",
 
         formData,
@@ -67,7 +66,7 @@ export default function AdminPanel() {
 
   const deleteTemplate = async (id) => {
     try {
-      await axios.delete(
+      await api.delete(
         `/api/admin/template/${id}`,
 
         {

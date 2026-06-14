@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 
 import "../styles/home.css";
 
-import axios from "axios";
-
 import api from '../api/axios';
 
 import TemplateCard from "../components/TemplateCard";
