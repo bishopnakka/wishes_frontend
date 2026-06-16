@@ -1,18 +1,28 @@
+import React, { Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import CreateWish from "./pages/CreateWish";
-import WishView from "./pages/WishView";
-import ProtectedRoute from "./components/ProtectedRoute";
-import AdminPanel from "./pages/AdminPanel";
+const Login = React.lazy(()=> import("./pages/Login"))
+// import Login from "./pages/Login";
+const Dashboard =
+React.lazy(() => import("./pages/Dashboard"));
+// import Dashboard from "./pages/Dashboard";
+const CreateWish = React.lazy(()=> import("./pages/CreateWish"))
+// import CreateWish from "./pages/CreateWish";
+const WishView = React.lazy(()=> import("./pages/WishView"))
+// import WishView from "./pages/WishView";
+const ProtectedRoute =React.lazy(()=> import("./Components/ProtectedRoute"))
+// import ProtectedRoute from "./components/ProtectedRoute";
+const AdminPanel = React.lazy(()=> import("./pages/AdminPanel"))
+// import AdminPanel from "./pages/AdminPanel";
 import Navbar from "./components/Navbar";
-import EditWish from "./pages/EditWish";
+const EditWish = React.lazy(()=> import("./pages/EditWish"))
+// import EditWish from "./pages/EditWish";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Navbar />
+        <Suspense fallback={<h2>Loading...</h2>}></Suspense>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -20,7 +30,6 @@ export default function App() {
           path="/dashboard"
           element={
             <ProtectedRoute>
-              {" "}
               <Dashboard />{" "}
             </ProtectedRoute>
           }
@@ -29,7 +38,6 @@ export default function App() {
           path="/create/:id"
           element={
             <ProtectedRoute>
-              {" "}
               <CreateWish />
             </ProtectedRoute>
           }

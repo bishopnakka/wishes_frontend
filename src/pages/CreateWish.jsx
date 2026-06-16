@@ -20,6 +20,8 @@ export default function CreateWish() {
 
   const [images, setImages] = useState([]);
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     fetchTemplate();
 
@@ -59,6 +61,7 @@ export default function CreateWish() {
   /* CREATE WISH */
 
   const createWish = async () => {
+    setLoading(true);
     try {
       const token = localStorage.getItem("token");
 
@@ -97,11 +100,29 @@ export default function CreateWish() {
       );
 
       setGeneratedLink(response.data.link);
-    } catch (error) {
-      console.log(error);
+    } catch(error){
 
-      alert("Wish Creation Failed");
-    }
+  console.log(
+    "FULL ERROR:",
+    error
+  );
+
+  console.log(
+    "SERVER RESPONSE:",
+    error.response?.data
+  );
+
+  alert(
+    JSON.stringify(
+      error.response?.data
+    )
+  );
+
+}  finally {
+
+    setLoading(false);
+
+  }
   };
 
   if (!template) {
@@ -157,7 +178,14 @@ export default function CreateWish() {
           </p>
         )}
 
-        <button onClick={createWish}>Generate Wish Link</button>
+        <button
+  disabled={loading}
+  onClick={createWish}
+>
+  {loading
+    ? "Creating..."
+    : "Generate Wish Link"}
+</button>
 
         {generatedLink && (
           <div className="success-box">

@@ -4,6 +4,10 @@ import api from "../api/axios";
 
 import { useParams } from "react-router-dom";
 
+import {
+  Helmet
+} from "react-helmet-async";
+
 import "../styles/wish.css";
 import "../styles/comments.css";
 
@@ -25,6 +29,8 @@ export default function WishView() {
   const [name, setName] = useState("");
 
   const [emailSuccess, setEmailSuccess] = useState(false);
+
+  const [emailLoading, setEmailLoading] = useState(false);
 
   useEffect(() => {
     fetchWish();
@@ -57,26 +63,23 @@ export default function WishView() {
   };
 
   const sendEmail = async () => {
-    console.log("SENDING TO:", email);
+    if (!email.trim()) {
+      alert("Enter Email");
 
-    if (!email || !email.includes("@")) {
-      alert("Enter Valid Email");
       return;
     }
 
     try {
+      setEmailLoading(true);
+
       const response = await api.post(
         "/api/email/send",
 
         {
           email,
-
           heading: wish.templateHeading,
-
           message: wish.message,
-
           secretWord: wish.unlockWord,
-
           link: window.location.href,
         },
       );
@@ -91,11 +94,11 @@ export default function WishView() {
         setEmailSuccess(false);
       }, 3000);
     } catch (error) {
-      console.log("FULL ERROR:", error);
-
-      console.log("RESPONSE:", error.response?.data);
+      console.log(error);
 
       alert(JSON.stringify(error.response?.data));
+    } finally {
+      setEmailLoading(false);
     }
   };
 
@@ -135,6 +138,19 @@ export default function WishView() {
 
   if (wish.unlockWord && !unlocked) {
     return (
+      <>
+<Helmet>
+  <title>
+    {wish.templateHeading}
+  </title>
+
+  <meta
+    name="description"
+    content={
+      wish.message?.slice(0, 160)
+    }
+  />
+</Helmet>
       <div className="unlock-page">
         <div className="unlock-box">
           <h1>Enter Secret Word 🔓</h1>
@@ -142,12 +158,18 @@ export default function WishView() {
           <input
             type="text"
             placeholder="Secret Word"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                unlockWish();
+              }
+            }}
             onChange={(e) => setEnteredWord(e.target.value)}
           />
 
           <button onClick={unlockWish}>Unlock Wish</button>
         </div>
       </div>
+      </>
     );
   }
 
@@ -180,7 +202,9 @@ export default function WishView() {
             onChange={(e) => setEmail(e.target.value)}
           />
           <br />
-          <button onClick={sendEmail}>Send Wish ✉️</button>
+          <button onClick={sendEmail} disabled={emailLoading || !email.trim()}>
+            {emailLoading ? "Sending..." : "Send Wish ✉️"}
+          </button>
           {emailSuccess && (
             <p className="success-msg">Email Sent Successfully 🎉</p>
           )}
