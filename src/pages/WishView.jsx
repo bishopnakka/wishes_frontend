@@ -63,6 +63,7 @@ export default function WishView() {
   };
 
   const sendEmail = async () => {
+    if (emailLoading) return;
     if (!email.trim()) {
       alert("Enter Email");
 
@@ -138,19 +139,6 @@ export default function WishView() {
 
   if (wish.unlockWord && !unlocked) {
     return (
-      <>
-<Helmet>
-  <title>
-    {wish.templateHeading}
-  </title>
-
-  <meta
-    name="description"
-    content={
-      wish.message?.slice(0, 160)
-    }
-  />
-</Helmet>
       <div className="unlock-page">
         <div className="unlock-box">
           <h1>Enter Secret Word 🔓</h1>
@@ -169,12 +157,33 @@ export default function WishView() {
           <button onClick={unlockWish}>Unlock Wish</button>
         </div>
       </div>
-      </>
     );
   }
 
   return (
     <>
+        <Helmet>
+      <title>
+        {wish.templateHeading}
+      </title>
+
+      <meta
+        name="description"
+        content={
+          wish.message?.slice(0, 160)
+        }
+      />
+
+      <meta
+        property="og:title"
+        content={wish.templateHeading}
+      />
+
+      <meta
+        property="og:description"
+        content={wish.message}
+      />
+    </Helmet>
       <div className="wish-page">
         <div className="wish-card">
           <div className="background-slider">
