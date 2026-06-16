@@ -10,7 +10,7 @@ const CreateWish = React.lazy(()=> import("./pages/CreateWish"))
 // import CreateWish from "./pages/CreateWish";
 const WishView = React.lazy(()=> import("./pages/WishView"))
 // import WishView from "./pages/WishView";
-const ProtectedRoute =React.lazy(()=> import("./Components/ProtectedRoute"))
+const ProtectedRoute =React.lazy(()=> import("./components/ProtectedRoute"))
 // import ProtectedRoute from "./components/ProtectedRoute";
 const AdminPanel = React.lazy(()=> import("./pages/AdminPanel"))
 // import AdminPanel from "./pages/AdminPanel";
