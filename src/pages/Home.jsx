@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import "../styles/home.css";
 
-import api from '../api/axios';
+import api from "../api/axios";
 
 import TemplateCard from "../components/TemplateCard";
 
@@ -17,7 +17,7 @@ export default function Home() {
     try {
       const response = await api.get("/api/template");
 
-      setTemplates(response.data);
+      setTemplates(Array.isArray(response.data) ? response.data : []);
     } catch (error) {
       console.log(error);
     }
@@ -35,9 +35,10 @@ export default function Home() {
       </div>
 
       <div className="templates-grid">
-        {templates.map((template) => (
-          <TemplateCard key={template._id} template={template} />
-        ))}
+        {Array.isArray(templates) &&
+          templates.map((template) => (
+            <TemplateCard key={template._id} template={template} />
+          ))}
       </div>
     </div>
   );
