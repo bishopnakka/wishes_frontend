@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import "../styles/createWish.css";
 import api from "../api/axios";
 
+import Loader from "../components/Loader";
+
 import { useParams, useNavigate } from "react-router-dom";
 
 export default function CreateWish() {
@@ -126,7 +128,7 @@ export default function CreateWish() {
   };
 
   if (!template) {
-    return <h1>Loading...</h1>;
+    return <Loader />;
   }
 
   return (

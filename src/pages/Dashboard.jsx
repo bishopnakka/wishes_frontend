@@ -4,12 +4,15 @@ import { useNavigate } from "react-router-dom";
 
 import api from "../api/axios";
 
+import Loader from "../components/Loader";
+
 import "../styles/dashboard.css";
 
 export default function Dashboard() {
   const navigate = useNavigate();
 
   const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchStats();
@@ -29,10 +32,13 @@ export default function Dashboard() {
     } catch (error) {
       console.log(error);
     }
+    finally{
+      setLoading(false);
+    }
   };
 
-  if (!stats) {
-    return <h2>Loading...</h2>;
+  if (loading) {
+    return <Loader />;
   }
 
   //delete

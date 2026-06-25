@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
+import Loader from "./components/Loader"
 const Login = React.lazy(()=> import("./pages/Login"))
 // import Login from "./pages/Login";
 const Dashboard =
@@ -22,7 +23,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Navbar />
-        <Suspense fallback={<h2>Loading...</h2>}></Suspense>
+        <Suspense fallback={<Loader />}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -51,6 +52,7 @@ export default function App() {
         />
         <Route path="/edit/:id" element={<EditWish />} />
       </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

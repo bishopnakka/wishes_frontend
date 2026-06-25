@@ -4,6 +4,8 @@ import api from "../api/axios";
 
 import { useParams } from "react-router-dom";
 
+import Loader from "../components/Loader";
+
 import {
   Helmet
 } from "react-helmet-async";
@@ -134,7 +136,7 @@ export default function WishView() {
   };
 
   if (!wish) {
-    return <h1>Loading...</h1>;
+    return <Loader />;
   }
 
   if (wish.unlockWord && !unlocked) {

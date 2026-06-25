@@ -4,10 +4,12 @@ import "../styles/home.css";
 
 import api from "../api/axios";
 
+import Loader from "../components/Loader";
 import TemplateCard from "../components/TemplateCard";
 
 export default function Home() {
   const [templates, setTemplates] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchTemplates();
@@ -21,7 +23,13 @@ export default function Home() {
     } catch (error) {
       console.log(error);
     }
+    finally {
+    setLoading(false);
+  }
   };
+  if(loading){
+    return <Loader />
+  }
 
   return (
     <div className="home-page">
