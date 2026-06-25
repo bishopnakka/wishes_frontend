@@ -204,20 +204,25 @@ export default function WishView() {
 
       <div className="comments-box">
         <div className="email-box">
-          <input
+          <h4>woeking on mail services...</h4>
+          <input disabled
             type="email"
             placeholder="Friend Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <br />
-          <button onClick={sendEmail} disabled={emailLoading || !email.trim()}>
+          {/* <button onClick={sendEmail} disabled={emailLoading || !email.trim()}>
+            {emailLoading ? "Sending..." : "Send Wish ✉️"}
+          </button> */}
+           <button onClick={sendEmail} disabled>
             {emailLoading ? "Sending..." : "Send Wish ✉️"}
           </button>
           {emailSuccess && (
             <p className="success-msg">Email Sent Successfully 🎉</p>
           )}
           <br />
+          <h5>copy link and share to others</h5>
           <button onClick={copyLink}>Copy Link 🔗</button>
         </div>
 
